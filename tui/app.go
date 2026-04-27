@@ -2,17 +2,35 @@ package tui
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
+	"sync/atomic"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
+type App struct {
+	app            *tview.Application
+	pages          *tview.Pages
+	theme          Theme
+	rng            *rand.Rand
+	currentActions []Action
+	cutsceneActive atomic.Bool
+	onQuit         func()
+
+	screen Screen
+
+	description *tview.TextView
+	status      *tview.TextView
+	actionsList *tview.List
+}
+
 func NewApp() *App {
 	theme := DefaultTheme()
 	applyTheme(theme)
 
-	a := &App{
+	app := &App{
 		app:   tview.NewApplication(),
 		pages: tview.NewPages(),
 		theme: theme,
@@ -28,9 +46,10 @@ func NewApp() *App {
 		},
 	}
 
-	a.buildMainLayout()
-	a.installGlobalInput()
-	return a
+	app.buildMainLayout()
+	app.installGlobalInput()
+
+	return app
 }
 
 func (a *App) Run() error {

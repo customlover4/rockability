@@ -2,11 +2,9 @@ package tui
 
 import (
 	"math/rand"
-	"sync/atomic"
 	"time"
 
 	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
 )
 
 type Theme struct {
@@ -59,22 +57,6 @@ type Screen struct {
 	Actions     []Action
 	Log         []string
 	Status      []StatusItem
-}
-
-type App struct {
-	app            *tview.Application
-	pages          *tview.Pages
-	theme          Theme
-	rng            *rand.Rand
-	currentActions []Action
-	cutsceneActive atomic.Bool
-	onQuit         func()
-
-	screen Screen
-
-	description *tview.TextView
-	status      *tview.TextView
-	actionsList *tview.List
 }
 
 func newRNG() *rand.Rand {
