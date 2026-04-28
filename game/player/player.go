@@ -5,6 +5,7 @@ import (
 	"game/game/player/region"
 	"game/game/player/stats"
 	"game/tui"
+	"time"
 )
 
 const startDate = "1995-12-28"
@@ -15,19 +16,21 @@ type Player struct {
 	playerName string
 	groupName  string
 	money      int
-	day        int
+	agetime    time.Time
 
 	stats stats.Stats
 }
 
 func DefaultPlayer() *Player {
+	at, _ := time.Parse(time.DateOnly, startDate)
+
 	return &Player{
 		playerName: "Безымянный",
 		groupName:  "Безымянный",
 		region:     region.DefaultRegion(),
 		money:      0,
-		day:        1,
 		stats:      stats.DefaultStats(),
+		agetime:    at,
 	}
 }
 
@@ -40,9 +43,8 @@ func (p *Player) RenderStatus() []tui.StatusItem {
 		{Label: "Деньги", Value: fmt.Sprintf(
 			"%d %s", p.money, p.region.MoneyFormat,
 		)},
-		{Label: "Дата", Value: p.FormatDate()},
+		{Label: "Дата", Value: p.agetime.Format(time.DateOnly)},
 	}
 }
-
 
 // todo: save/load functions

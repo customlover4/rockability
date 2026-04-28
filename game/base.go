@@ -15,6 +15,12 @@ func (g *Game) BaseUpdateScreen() {
 		Status: g.p.RenderStatus(),
 		Actions: []tui.Action{
 			{
+				Label: "Инфо",
+				Handle: func(a *tui.App) {
+					// todo: realiz
+				},
+			},
+			{
 				Label: "Музыка",
 				Handle: func(a *tui.App) {
 					// todo: realiz
@@ -47,7 +53,7 @@ func (g *Game) BaseUpdateScreen() {
 			{
 				Label: "Пропустить день",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.p.SkipDay(a)
 				},
 			},
 			{
