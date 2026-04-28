@@ -11,9 +11,7 @@ func main() {
 	app := tui.NewApp()
 
 	g := game.New(app)
-	g.Render()
-
-	
+	g.StartUpUpdateScreen()
 
 	if err := app.Run(); err != nil {
 		log.Fatal(err)

@@ -254,3 +254,7 @@ func (a *App) installGlobalInput() {
 		return event
 	})
 }
+
+func (a *App) Stop() {
+	a.app.Stop()
+}

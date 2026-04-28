@@ -10,10 +10,10 @@ import (
 )
 
 func (a *App) PlayCutscene(cutscene Cutscene) {
-	if a.cutsceneActive.Load() {
+	// TODO: try it
+	if !a.cutsceneActive.CompareAndSwap(false, true) {
 		return
 	}
-	a.cutsceneActive.Store(true)
 
 	view := tview.NewTextView().
 		SetDynamicColors(true).
