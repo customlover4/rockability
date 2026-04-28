@@ -11,5 +11,5 @@ func (p *Player) SetGroupName(name string) {
 }
 
 func (p *Player) SetRegion(region region.Region) {
-	p.region = region
+	p.Region = region
 }

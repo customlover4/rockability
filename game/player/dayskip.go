@@ -6,8 +6,8 @@ import (
 )
 
 func (p *Player) ProcessStructs(a *tui.App) {
-	p.stats.ProcessNewDay(a, p.agetime)
-	p.region.NewDayProcessor(a, p.agetime)
+	p.Stats.ProcessNewDay(a, p.agetime)
+	p.Region.NewDayProcessor(a, p.agetime)
 	// todo: here new days generators
 	// todo: for region and other structs data
 }

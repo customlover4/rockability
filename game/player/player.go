@@ -11,14 +11,14 @@ import (
 const startDate = "1995-12-28"
 
 type Player struct {
-	region region.Region
+	Region region.Region
 
 	playerName string
 	groupName  string
 	money      int
 	agetime    time.Time
 
-	stats stats.Stats
+	Stats stats.Stats
 }
 
 func DefaultPlayer() *Player {
@@ -27,9 +27,9 @@ func DefaultPlayer() *Player {
 	return &Player{
 		playerName: "Безымянный",
 		groupName:  "Безымянный",
-		region:     region.DefaultRegion(),
+		Region:     region.DefaultRegion(),
 		money:      0,
-		stats:      stats.DefaultStats(),
+		Stats:      stats.DefaultStats(),
 		agetime:    at,
 	}
 }
@@ -37,11 +37,11 @@ func DefaultPlayer() *Player {
 func (p *Player) RenderStatus() []tui.StatusItem {
 	return []tui.StatusItem{
 		{Label: "Имя", Value: p.playerName},
-		{Label: "Возраст", Value: fmt.Sprintf("%d", p.stats.Age)},
+		{Label: "Возраст", Value: fmt.Sprintf("%d", p.Stats.Age)},
 		{Label: "Группа", Value: p.groupName},
-		{Label: "Регион", Value: p.region.Title},
+		{Label: "Регион", Value: p.Region.Title},
 		{Label: "Деньги", Value: fmt.Sprintf(
-			"%d %s", p.money, p.region.MoneyFormat,
+			"%d %s", p.money, p.Region.MoneyFormat,
 		)},
 		{Label: "Дата", Value: p.agetime.Format(time.DateOnly)},
 	}
