@@ -2,7 +2,6 @@ package game
 
 import "game/tui"
 
-// todo: think about base actions
 func (g *Game) BaseUpdateScreen() {
 	g.app.SetScreen(tui.Screen{
 		ActionTitle: "Действия",
@@ -12,57 +11,64 @@ func (g *Game) BaseUpdateScreen() {
 			"Твой путь начинается, тебе 18, только окончил школу,",
 			"твоя цель стать лучшим музыкантом в мире.",
 		},
-		Status: g.p.RenderStatus(),
-		Actions: []tui.Action{
+		Status:  g.p.RenderStatus(),
+		Actions: []tui.Action{},
+	})
+	g.BaseActions()
+}
+
+func (g *Game) BaseActions() {
+	g.app.SetActions(
+		[]tui.Action{
 			{
-				Label: "Инфо",
+				Label: "Инфо (in progress)",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.InfoMenuActions()
 				},
 			},
 			{
-				Label: "Музыка",
+				Label: "Музыка (in progress)",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.MusicMenuActions()
 				},
 			},
 			{
-				Label: "Группа",
+				Label: "Группа (in progress)",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.BandMenuActions()
 				},
 			},
 			{
-				Label: "Финансы",
+				Label: "Финансы (in progress)",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.FinanceMenuActions()
 				},
 			},
 			{
-				Label: "Общение",
+				Label: "Общение (in progress)",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.NetworkingMenuActions()
 				},
 			},
 			{
-				Label: "Разное",
+				Label: "Разное (in progress)",
 				Handle: func(a *tui.App) {
-					// todo: realiz
+					g.OtherMenuActions()
 				},
 			},
 			{
-				Label: "Пропустить день",
+				Label: "Пропустить день (in progress)",
 				Handle: func(a *tui.App) {
 					g.p.SkipDay(a)
 				},
 			},
 			{
-				Label: "Выйти и сохранить",
+				Label: "Выйти и сохранить (in progress)",
 				Handle: func(a *tui.App) {
 					a.Stop()
 					// todo: realiz
 				},
 			},
 		},
-	})
+	)
 }
