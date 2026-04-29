@@ -14,6 +14,7 @@ func (g *Game) BaseUpdateScreen() {
 		},
 		Status:  g.p.RenderStatus(),
 		Actions: []tui.Action{},
+		Stats:   g.p.Stats.RenderStat(),
 	})
 	g.BaseActions()
 }

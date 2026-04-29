@@ -291,7 +291,6 @@ func (g *Game) writeSongFromIdea(index int) {
 			g.app.AppendLog("Песня написана")
 			g.p.Stats.AddInspiration(-20)
 			g.SkipDay(1)
-			g.app.SetStatus(g.p.RenderStatus())
 			g.MusicMenuActions()
 		},
 	)
@@ -337,7 +336,6 @@ func (g *Game) Improvization() {
 	}
 
 	g.SkipDay(1)
-	g.app.SetStatus(g.p.RenderStatus())
 }
 
 // ########################################################################

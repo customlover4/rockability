@@ -29,5 +29,9 @@ func (g *Game) SkipDay(days int) {
 	g.GlobalRandomEvents()
 
 	g.Events()
+	g.app.UpdateStatusStats(
+		g.p.RenderStatus(),
+		g.p.Stats.RenderStat(),
+	)
 	g.app.SetStatus(g.p.RenderStatus())
 }

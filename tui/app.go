@@ -10,6 +10,12 @@ import (
 	"github.com/rivo/tview"
 )
 
+const (
+	HapinessIdx = iota
+	HealthIdx
+	InspirationIdx
+)
+
 type App struct {
 	app            *tview.Application
 	pages          *tview.Pages
@@ -24,6 +30,7 @@ type App struct {
 	description *tview.TextView
 	status      *tview.TextView
 	actionsList *tview.List
+	statsView   *tview.TextView
 
 	popupQueue  []func()
 	popupActive bool
@@ -45,6 +52,20 @@ func NewApp() *App {
 			Log: []string{
 				"UI framework готов.",
 				"Заполни actions, log и status своими данными.",
+			},
+			Stats: []Stat{
+				HapinessIdx: {
+					Name:  "Счастье",
+					Value: 75,
+				},
+				HealthIdx: {
+					Name:  "Здоровье",
+					Value: 100,
+				},
+				InspirationIdx: {
+					Name:  "Вдохновение",
+					Value: 50,
+				},
 			},
 		},
 
@@ -87,6 +108,31 @@ func (a *App) SetActions(actions []Action) {
 	a.render()
 }
 
+func (a *App) UpdateStatusStats(status []StatusItem, st []Stat) {
+	a.screen.Status = append([]StatusItem(nil), status...)
+	a.screen.Stats = append([]Stat(nil), st...)
+	a.render()
+}
+
+func (a *App) SetStats(stats []Stat) {
+	a.screen.Stats = append([]Stat(nil), stats...)
+	a.render()
+}
+
+func (a *App) UpdateStat(index int, value int) {
+	if index < 0 || index >= len(a.screen.Stats) {
+		return
+	}
+	if value < 0 {
+		value = 0
+	}
+	if value > 100 {
+		value = 100
+	}
+	a.screen.Stats[index].Value = value
+	a.render()
+}
+
 func (a *App) SetLog(lines []string) {
 	a.screen.Log = append([]string(nil), lines...)
 	a.render()
@@ -121,18 +167,16 @@ func (a *App) FocusActions() {
 func (a *App) enqueuePopup(showFunc func()) {
 	if !a.popupActive {
 		a.popupActive = true
-		showFunc() // показываем сразу
+		showFunc()
 	} else {
-		a.popupQueue = append(a.popupQueue, showFunc) // в очередь
+		a.popupQueue = append(a.popupQueue, showFunc)
 	}
 }
 
-// dequeuePopup закрывает текущий поп-ап и показывает следующий из очереди
 func (a *App) dequeuePopup() {
 	a.popupActive = false
 
 	if len(a.popupQueue) > 0 {
-		// Берём первый из очереди и показываем
 		next := a.popupQueue[0]
 		a.popupQueue = a.popupQueue[1:]
 		a.popupActive = true
@@ -140,7 +184,6 @@ func (a *App) dequeuePopup() {
 	}
 }
 
-// isPopupActive возвращает, показан ли сейчас поп-ап
 func (a *App) isPopupActive() bool {
 	return a.popupActive
 }
@@ -174,15 +217,30 @@ func (a *App) buildMainLayout() {
 	a.actionsList.SetBorderColor(a.theme.Border)
 	a.actionsList.SetTitleColor(a.theme.Title)
 
+	a.statsView = tview.NewTextView().
+		SetDynamicColors(true).
+		SetTextAlign(tview.AlignLeft).
+		SetWordWrap(false)
+	a.statsView.SetBorder(true)
+	a.statsView.SetBackgroundColor(a.theme.PanelBackground)
+	a.statsView.SetTextColor(a.theme.PanelText)
+	a.statsView.SetBorderColor(a.theme.Border)
+	a.statsView.SetTitleColor(a.theme.Title)
+	a.statsView.SetTitle("Показатели")
+
+	leftColumn := tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(a.actionsList, 0, 3, true). // 3 части высоты — список действий
+		AddItem(a.statsView, 0, 1, false)   // 1 часть высоты — показатели
+
+	topLayout := tview.NewFlex().
+		AddItem(leftColumn, 40, 1, true).   // фикс 40 символов ширина
+		AddItem(a.description, 0, 3, false) // остальная ширина — лог
+
 	mainLayout := tview.NewFlex().
 		SetDirection(tview.FlexRow).
-		AddItem(
-			tview.NewFlex().
-				AddItem(a.actionsList, 40, 1, true).
-				AddItem(a.description, 0, 3, false),
-			0, 1, true,
-		).
-		AddItem(a.status, 3, 0, false)
+		AddItem(topLayout, 0, 1, true). // гибкая высота
+		AddItem(a.status, 3, 0, false)  // фикс 3 строки внизу
 	mainLayout.SetBackgroundColor(a.theme.Background)
 
 	a.pages.AddPage("main", mainLayout, true, true)
@@ -207,6 +265,7 @@ func (a *App) render() {
 	a.renderActions()
 	a.renderLog()
 	a.renderStatus()
+	a.renderStats()
 }
 
 func (a *App) renderActions() {
@@ -248,6 +307,24 @@ func (a *App) renderStatus() {
 		parts = append(parts, fmt.Sprintf("[%s]%s:[%s] %s", a.theme.StatusAccent, item.Label, a.theme.StatusValue, item.Value))
 	}
 	a.status.SetText(strings.Join(parts, "   "))
+}
+
+func (a *App) renderStats() {
+	if len(a.screen.Stats) == 0 {
+		a.screen.Stats = []Stat{
+			{Name: "Счастье", Value: 0},
+			{Name: "Здоровье", Value: 0},
+			{Name: "Вдохновение", Value: 0},
+		}
+	}
+
+	lines := make([]string, 0, 3)
+	for _, stat := range a.screen.Stats {
+		lines = append(
+			lines, fmt.Sprintf("%s: %d/100", stat.Name, stat.Value),
+		)
+	}
+	a.statsView.SetText(strings.Join(lines, "\n"))
 }
 
 func (a *App) installGlobalInput() {

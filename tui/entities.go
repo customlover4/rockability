@@ -26,6 +26,11 @@ type StatusItem struct {
 	Value string
 }
 
+type Stat struct {
+	Name  string
+	Value int
+}
+
 type Action struct {
 	Label  string
 	Handle func(*App)
@@ -57,6 +62,7 @@ type Screen struct {
 	Actions     []Action
 	Log         []string
 	Status      []StatusItem
+	Stats       []Stat
 }
 
 func newRNG() *rand.Rand {

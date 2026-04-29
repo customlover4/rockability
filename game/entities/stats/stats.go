@@ -67,3 +67,20 @@ func (s *Stats) RenderOtherInfo() string {
 	}
 	return strings.Join(res, "\n")
 }
+
+func (s *Stats) RenderStat() []tui.Stat {
+	return []tui.Stat{
+		{
+			Name:  "Счастье",
+			Value: int(s.Hapiness),
+		},
+		{
+			Name:  "Здоровье",
+			Value: int(s.Health),
+		},
+		{
+			Name:  "Вдохновение",
+			Value: int(s.Inspiration),
+		},
+	}
+}
