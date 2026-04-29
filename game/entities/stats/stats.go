@@ -59,15 +59,6 @@ func (s *Stats) RenderHealth() string {
 	return fmt.Sprintf("%.0f", s.Health)
 }
 
-func (s *Stats) RenderOtherInfo() string {
-	res := []string{
-		fmt.Sprintf("Счастье: %.0f", s.Hapiness),
-		fmt.Sprintf("Вдохновение: %.0f", s.Inspiration),
-		fmt.Sprintf("Популярность: %.0f", s.Popularity),
-	}
-	return strings.Join(res, "\n")
-}
-
 func (s *Stats) RenderStat() []tui.Stat {
 	return []tui.Stat{
 		{

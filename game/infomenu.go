@@ -4,20 +4,6 @@ import (
 	"game/tui"
 )
 
-func (g *Game) GlobalInfo() {
-	g.app.ShowMessage(
-		"Основная информация",
-		g.p.Stats.RenderOtherInfo(),
-	)
-}
-
-func (g *Game) HealthInfo() {
-	g.app.ShowMessage(
-		"Здоровье",
-		g.p.Stats.RenderHealth(),
-	)
-}
-
 func (g *Game) SkillInfo() {
 	g.app.ShowMessage(
 		"Навыки",
@@ -38,18 +24,6 @@ func (g *Game) Inventory() {
 
 func (g *Game) InfoMenuActions() {
 	g.app.SetActions([]tui.Action{
-		{
-			Label: "Общая информаци",
-			Handle: func(a *tui.App) {
-				g.GlobalInfo()
-			},
-		},
-		{
-			Label: "Здоровье",
-			Handle: func(a *tui.App) {
-				g.HealthInfo()
-			},
-		},
 		{
 			Label: "Навыки",
 			Handle: func(a *tui.App) {
