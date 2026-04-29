@@ -1,7 +1,7 @@
 package game
 
 import (
-	"game/game/player"
+	"game/game/entities/event"
 	"time"
 )
 
@@ -16,7 +16,7 @@ func (p *Game) GlobalRandomEvents() {}
 func (g *Game) Events() {
 	for g.p.Events.Len() != 0 {
 		e := g.p.Events.Front()
-		ev := e.Value.(player.Event)
+		ev := e.Value.(event.Event)
 		ev.Handle(g.app)
 		g.p.Events.Remove(e)
 	}

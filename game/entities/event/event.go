@@ -1,4 +1,4 @@
-package player
+package event
 
 import (
 	"game/tui"

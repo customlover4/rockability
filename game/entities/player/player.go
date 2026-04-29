@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"game/game/entities/band"
+	"game/game/entities/event"
 	"game/game/entities/music"
 	"game/game/entities/region"
 	"game/game/entities/stats"
@@ -76,6 +77,6 @@ func (p *Player) AddMoney(value int) bool {
 	return true
 }
 
-func (p *Player) NewEvent(e Event) {
+func (p *Player) NewEvent(e event.Event) {
 	p.Events.PushBack(e)
 }

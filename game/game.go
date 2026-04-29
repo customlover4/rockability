@@ -1,7 +1,7 @@
 package game
 
 import (
-	"game/game/player"
+	"game/game/entities/player"
 	"game/tui"
 	"math/rand/v2"
 	"time"
