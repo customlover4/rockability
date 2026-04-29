@@ -7,7 +7,7 @@ import (
 func (g *Game) GlobalInfo(a *tui.App) {
 	a.ShowMessage(
 		"Основная информация",
-		"",
+		g.p.Stats.RenderOtherInfo(),
 	)
 }
 
@@ -25,10 +25,10 @@ func (g *Game) SkillInfo(a *tui.App) {
 	)
 }
 
-func (g *Game) GroupInfo(a *tui.App) {
+func (g *Game) BandInfo(a *tui.App) {
 	a.ShowMessage(
-		"Навыки",
-		g.p.Stats.RenderStats(),
+		"Группа",
+		g.p.Band.RenderInfo(),
 	)
 }
 
@@ -57,9 +57,9 @@ func (g *Game) InfoMenuActions() {
 			},
 		},
 		{
-			Label: "Моя группа",
+			Label: "Группа",
 			Handle: func(a *tui.App) {
-				g.GroupInfo(a)
+				g.BandInfo(a)
 			},
 		},
 		{
