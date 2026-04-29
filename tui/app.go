@@ -24,6 +24,9 @@ type App struct {
 	description *tview.TextView
 	status      *tview.TextView
 	actionsList *tview.List
+
+	popupQueue  []func()
+	popupActive bool
 }
 
 func NewApp() *App {
@@ -44,6 +47,9 @@ func NewApp() *App {
 				"Заполни actions, log и status своими данными.",
 			},
 		},
+
+		popupQueue:  make([]func(), 0, 4),
+		popupActive: false,
 	}
 
 	app.buildMainLayout()
@@ -112,6 +118,33 @@ func (a *App) FocusActions() {
 	a.app.SetFocus(a.actionsList)
 }
 
+func (a *App) enqueuePopup(showFunc func()) {
+	if !a.popupActive {
+		a.popupActive = true
+		showFunc() // показываем сразу
+	} else {
+		a.popupQueue = append(a.popupQueue, showFunc) // в очередь
+	}
+}
+
+// dequeuePopup закрывает текущий поп-ап и показывает следующий из очереди
+func (a *App) dequeuePopup() {
+	a.popupActive = false
+
+	if len(a.popupQueue) > 0 {
+		// Берём первый из очереди и показываем
+		next := a.popupQueue[0]
+		a.popupQueue = a.popupQueue[1:]
+		a.popupActive = true
+		next()
+	}
+}
+
+// isPopupActive возвращает, показан ли сейчас поп-ап
+func (a *App) isPopupActive() bool {
+	return a.popupActive
+}
+
 func (a *App) buildMainLayout() {
 	a.description = tview.NewTextView().
 		SetDynamicColors(true).
@@ -145,7 +178,7 @@ func (a *App) buildMainLayout() {
 		SetDirection(tview.FlexRow).
 		AddItem(
 			tview.NewFlex().
-				AddItem(a.actionsList, 30, 1, true).
+				AddItem(a.actionsList, 40, 1, true).
 				AddItem(a.description, 0, 3, false),
 			0, 1, true,
 		).
@@ -228,11 +261,13 @@ func (a *App) installGlobalInput() {
 			if a.pages.HasPage("popup") {
 				a.pages.RemovePage("popup")
 				a.app.SetFocus(a.actionsList)
+				a.dequeuePopup()
 				return nil
 			}
 			if a.pages.HasPage("modal") {
 				a.pages.RemovePage("modal")
 				a.app.SetFocus(a.actionsList)
+				a.dequeuePopup()
 				return nil
 			}
 			if a.onQuit != nil {
