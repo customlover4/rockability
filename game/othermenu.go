@@ -3,6 +3,7 @@ package game
 import "game/tui"
 
 func (g *Game) PlayOutside(a *tui.App) {}
+func (g *Game) StreetShop(a *tui.App)  {}
 
 func (g *Game) OtherMenuActions() {
 	g.app.SetActions([]tui.Action{
@@ -10,6 +11,12 @@ func (g *Game) OtherMenuActions() {
 			Label: "Выступать на улице",
 			Handle: func(a *tui.App) {
 				g.VisitClub(a)
+			},
+		},
+		{
+			Label: "Уличный рынок",
+			Handle: func(a *tui.App) {
+				g.StreetShop(a)
 			},
 		},
 		// ...
