@@ -17,15 +17,15 @@ type Player struct {
 	Region region.Region
 
 	playerName string
-	money      int
-	agetime    time.Time
+	Money      int
+	Agetime    time.Time
 
 	Stats           stats.Stats
 	Band            *band.Band
 	ImprovizationXP float64
 	Ideas           []music.Idea
 
-	events *list.List
+	Events *list.List
 }
 
 func DefaultPlayer() *Player {
@@ -34,14 +34,14 @@ func DefaultPlayer() *Player {
 	return &Player{
 		playerName: "Безымянный",
 		Region:     region.DefaultRegion(),
-		money:      0,
-		agetime:    at,
+		Money:      0,
+		Agetime:    at,
 
 		Stats:           stats.DefaultStats(),
 		ImprovizationXP: 0,
 		Ideas:           make([]music.Idea, 0),
 
-		events: list.New(),
+		Events: list.New(),
 	}
 }
 
@@ -51,9 +51,9 @@ func (p *Player) RenderStatus() []tui.StatusItem {
 		{Label: "Возраст", Value: fmt.Sprintf("%d", p.Stats.Age)},
 		{Label: "Регион", Value: p.Region.Title},
 		{Label: "Деньги", Value: fmt.Sprintf(
-			"%d $", p.money,
+			"%d $", p.Money,
 		)},
-		{Label: "Дата", Value: p.agetime.Format(time.DateOnly)},
+		{Label: "Дата", Value: p.Agetime.Format(time.DateOnly)},
 	}
 }
 
@@ -68,14 +68,14 @@ func (p *Player) SetRegion(region region.Region) {
 }
 
 func (p *Player) AddMoney(value int) bool {
-	if p.money+value < 0 {
+	if p.Money+value < 0 {
 		return false
 	}
 
-	p.money += value
+	p.Money += value
 	return true
 }
 
 func (p *Player) NewEvent(e Event) {
-	p.events.PushBack(e)
+	p.Events.PushBack(e)
 }

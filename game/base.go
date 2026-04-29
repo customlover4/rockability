@@ -60,7 +60,7 @@ func (g *Game) BaseActions() {
 			{
 				Label: "Пропустить день (in progress)",
 				Handle: func(a *tui.App) {
-					g.p.SkipDay(a)
+					g.SkipDay(1)
 				},
 			},
 			{

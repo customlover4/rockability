@@ -2,14 +2,14 @@ package game
 
 import "game/tui"
 
-func (g *Game) SetListEdit(a *tui.App) {}
-func (g *Game) NewMember(a *tui.App)   {}
-func (g *Game) ManagerMenu(a *tui.App) {}
-func (g *Game) LabelMenu(a *tui.App)   {}
-func (g *Game) MerchMenu(a *tui.App)   {}
-func (g *Game) NewGig(a *tui.App)      {}
-func (g *Game) NewTour(a *tui.App)     {}
-func (g *Game) Discography(a *tui.App) {}
+func (g *Game) SetListEdit() {}
+func (g *Game) NewMember()   {}
+func (g *Game) ManagerMenu() {}
+func (g *Game) LabelMenu()   {}
+func (g *Game) MerchMenu()   {}
+func (g *Game) NewGig()      {}
+func (g *Game) NewTour()     {}
+func (g *Game) Discography() {}
 
 func (g *Game) BandMenuActions() {
 	band := []tui.Action{}
@@ -20,49 +20,49 @@ func (g *Game) BandMenuActions() {
 		{
 			Label: "Сет-лист",
 			Handle: func(a *tui.App) {
-				g.SetListEdit(a)
+				g.SetListEdit()
 			},
 		},
 		{
 			Label: "Найти участника",
 			Handle: func(a *tui.App) {
-				g.NewMember(a)
+				g.NewMember()
 			},
 		},
 		{
 			Label: "Менеджер",
 			Handle: func(a *tui.App) {
-				g.ManagerMenu(a)
+				g.ManagerMenu()
 			},
 		},
 		{
 			Label: "Лейбл",
 			Handle: func(a *tui.App) {
-				g.LabelMenu(a)
+				g.LabelMenu()
 			},
 		},
 		{
 			Label: "Мерч",
 			Handle: func(a *tui.App) {
-				g.MerchMenu(a)
+				g.MerchMenu()
 			},
 		},
 		{
 			Label: "Организовать выступление",
 			Handle: func(a *tui.App) {
-				g.NewGig(a)
+				g.NewGig()
 			},
 		},
 		{
 			Label: "Организовать тур",
 			Handle: func(a *tui.App) {
-				g.NewTour(a)
+				g.NewTour()
 			},
 		},
 		{
 			Label: "Дискография",
 			Handle: func(a *tui.App) {
-				g.NewTour(a)
+				g.NewTour()
 			},
 		},
 		{

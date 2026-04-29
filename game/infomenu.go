@@ -4,35 +4,35 @@ import (
 	"game/tui"
 )
 
-func (g *Game) GlobalInfo(a *tui.App) {
-	a.ShowMessage(
+func (g *Game) GlobalInfo() {
+	g.app.ShowMessage(
 		"Основная информация",
 		g.p.Stats.RenderOtherInfo(),
 	)
 }
 
-func (g *Game) HealthInfo(a *tui.App) {
-	a.ShowMessage(
+func (g *Game) HealthInfo() {
+	g.app.ShowMessage(
 		"Здоровье",
 		g.p.Stats.RenderHealth(),
 	)
 }
 
-func (g *Game) SkillInfo(a *tui.App) {
-	a.ShowMessage(
+func (g *Game) SkillInfo() {
+	g.app.ShowMessage(
 		"Навыки",
 		g.p.Stats.RenderStats(),
 	)
 }
 
-func (g *Game) BandInfo(a *tui.App) {
-	a.ShowMessage(
+func (g *Game) BandInfo() {
+	g.app.ShowMessage(
 		"Группа",
 		g.p.Band.RenderInfo(),
 	)
 }
 
-func (g *Game) Inventory(a *tui.App) {
+func (g *Game) Inventory() {
 	// todo: open other menu
 }
 
@@ -41,31 +41,31 @@ func (g *Game) InfoMenuActions() {
 		{
 			Label: "Общая информаци",
 			Handle: func(a *tui.App) {
-				g.GlobalInfo(a)
+				g.GlobalInfo()
 			},
 		},
 		{
 			Label: "Здоровье",
 			Handle: func(a *tui.App) {
-				g.HealthInfo(a)
+				g.HealthInfo()
 			},
 		},
 		{
 			Label: "Навыки",
 			Handle: func(a *tui.App) {
-				g.SkillInfo(a)
+				g.SkillInfo()
 			},
 		},
 		{
 			Label: "Группа",
 			Handle: func(a *tui.App) {
-				g.BandInfo(a)
+				g.BandInfo()
 			},
 		},
 		{
 			Label: "Инвентарь",
 			Handle: func(a *tui.App) {
-				g.Inventory(a)
+				g.Inventory()
 			},
 		},
 		{

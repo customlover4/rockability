@@ -19,17 +19,21 @@ func (g *Game) StartUpUpdateScreen() {
 		Actions: []tui.Action{
 			{
 				Label:  "Новая игра",
-				Handle: g.NewGameStartup,
+				Handle: func(a *tui.App) {
+					g.NewGameStartup()
+				},
 			},
 			{
 				Label:  "Загрузить игру",
-				Handle: g.LoadGameStartup,
+				Handle: func (a *tui.App) {
+					g.LoadGameStartup()
+				},
 			},
 		},
 	})
 }
 
-func (g *Game) ChoiceRegion(a *tui.App) {
+func (g *Game) ChoiceRegion() {
 	regions := make([]tui.ChoiceOption, 0, len(region.ChoiceRegion))
 	for _, v := range region.ChoiceRegion {
 		regions = append(regions, tui.ChoiceOption{
@@ -41,13 +45,13 @@ func (g *Game) ChoiceRegion(a *tui.App) {
 		})
 	}
 
-	a.ShowChoicePopup(
+	g.app.ShowChoicePopup(
 		"Выберите регион", "Регион начала игры", regions,
 	)
 }
 
-func (g *Game) NewGameStartup(a *tui.App) {
-	a.ShowFormPopup("Создание игры", []tui.FormField{
+func (g *Game) NewGameStartup() {
+	g.app.ShowFormPopup("Создание игры", []tui.FormField{
 		{
 			Key:          "player_name",
 			Label:        "Сценическое имя",
@@ -65,11 +69,11 @@ func (g *Game) NewGameStartup(a *tui.App) {
 	}, func(values map[string]string) {
 		g.p.SetName(values["player_name"])
 		g.p.Band = band.NewBand(values["group_name"])
-		g.ChoiceRegion(a)
+		g.ChoiceRegion()
 	})
 }
 
-func (g *Game) LoadGameStartup(a *tui.App) {
-	a.ShowMessage("Загрузка игры", "временно недоступно")
-	a.AppendLog("Загрузка игры пока недоступна")
+func (g *Game) LoadGameStartup() {
+	g.app.ShowMessage("Загрузка игры", "временно недоступно")
+	g.app.AppendLog("Загрузка игры пока недоступна")
 }

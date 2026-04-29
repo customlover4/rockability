@@ -2,42 +2,42 @@ package game
 
 import "game/tui"
 
-func (g *Game) MyMeetings(a *tui.App)   {}
-func (g *Game) VisitClub(a *tui.App)    {}
-func (g *Game) VisitGalery(a *tui.App)  {}
-func (g *Game) VisitConcert(a *tui.App) {}
-func (g *Game) WalkAround(a *tui.App)   {}
+func (g *Game) MyMeetings()   {}
+func (g *Game) VisitClub()    {}
+func (g *Game) VisitGalery()  {}
+func (g *Game) VisitConcert() {}
+func (g *Game) WalkAround()   {}
 
 func (g *Game) NetworkingMenuActions() {
 	g.app.SetActions([]tui.Action{
 		{
 			Label: "Мои знакомства",
 			Handle: func(a *tui.App) {
-				g.VisitClub(a)
+				g.VisitClub()
 			},
 		},
 		{
 			Label: "Посетить клуб",
 			Handle: func(a *tui.App) {
-				g.VisitClub(a)
+				g.VisitClub()
 			},
 		},
 		{
 			Label: "Посетить арт гелерею",
 			Handle: func(a *tui.App) {
-				g.VisitGalery(a)
+				g.VisitGalery()
 			},
 		},
 		{
 			Label: "Посетить концерт",
 			Handle: func(a *tui.App) {
-				g.VisitConcert(a)
+				g.VisitConcert()
 			},
 		},
 		{
 			Label: "Выйти на прогулку",
 			Handle: func(a *tui.App) {
-				g.WalkAround(a)
+				g.WalkAround()
 			},
 		},
 		{

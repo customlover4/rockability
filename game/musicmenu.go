@@ -13,31 +13,31 @@ func (g *Game) MusicMenuActions() {
 		{
 			Label: "Импровизировать на гитаре",
 			Handle: func(a *tui.App) {
-				g.Improvization(a)
+				g.Improvization()
 			},
 		},
 		{
 			Label: "Доработать идеи",
 			Handle: func(a *tui.App) {
-				g.RewriteSong(a)
+				g.RewriteSong()
 			},
 		},
 		{
 			Label: "Написать трек",
 			Handle: func(a *tui.App) {
-				g.WriteSongs(a)
+				g.WriteSongs()
 			},
 		},
 		{
 			Label: "Репетировать одному",
 			Handle: func(a *tui.App) {
-				g.SoloRepetition(a)
+				g.SoloRepetition()
 			},
 		},
 		{
 			Label: "Каталог треков",
 			Handle: func(a *tui.App) {
-				g.ShowSongs(a)
+				g.ShowSongs()
 			},
 		},
 		{
@@ -52,34 +52,34 @@ func (g *Game) MusicMenuActions() {
 //#########################################################################
 // RECORD SONG (INTO SONG MENU)
 
-func (g *Game) RecordSong(a *tui.App, index int) {
-	a.ShowChoicePopup(
+func (g *Game) RecordSong(index int) {
+	g.app.ShowChoicePopup(
 		"Выберите способ записи",
 		"Способ записи влияет на конечный результат",
 		[]tui.ChoiceOption{
 			{
 				Label: "Дома на диктофон - Бесплатно",
 				Handle: func(a *tui.App) {
-					g.recordSongWithCoefficient(0.15, 0, a, index)
+					g.recordSongWithCoefficient(0.15, 0, index)
 				},
 			},
 			{
 				Label: "Студия на районе - 200 $",
 				Handle: func(a *tui.App) {
-					g.recordSongWithCoefficient(0.5, 200, a, index)
+					g.recordSongWithCoefficient(0.5, 200, index)
 				},
 			},
 			{
 				Label: "Лучшая студия в городе - 1000 $",
 				Handle: func(a *tui.App) {
-					g.recordSongWithCoefficient(1, 1000, a, index)
+					g.recordSongWithCoefficient(1, 1000, index)
 				},
 			},
 		},
 	)
 }
 
-func (g *Game) recordSongWithCoefficient(coef float64, price int, a *tui.App, index int) {
+func (g *Game) recordSongWithCoefficient(coef float64, price int, index int) {
 	if index < 0 || index >= len(g.p.Band.Songs) {
 		return
 	}
@@ -94,13 +94,13 @@ func (g *Game) recordSongWithCoefficient(coef float64, price int, a *tui.App, in
 	g.p.Band.Songs[index].Record()
 
 	g.app.AppendLog("Песня успешно записана")
-	g.p.SkipDay(a)
+	g.SkipDay(1)
 }
 
 //#########################################################################
 // BAND REPETITION (INTO SONG MENU)
 
-func (g *Game) BandRepetition(a *tui.App, index int) {
+func (g *Game) BandRepetition(index int) {
 	g.p.Band.AddTeamwork(generators.Float64HalfYear(g.rnd))
 	g.p.Band.Songs[index].AddSkill(generators.Float64ThreeDays(g.rnd))
 	for _, member := range g.p.Band.Members {
@@ -111,15 +111,15 @@ func (g *Game) BandRepetition(a *tui.App, index int) {
 	g.p.Stats.AddPlayingSkill(generators.Float64Year(g.rnd))
 
 	g.app.AppendLog("Вы репетировали весь день")
-	g.p.SkipDay(a)
+	g.SkipDay(1)
 }
 
 //#########################################################################
 // SHOW SONGS
 
-func (g *Game) ShowSongs(a *tui.App) {
+func (g *Game) ShowSongs() {
 	if len(g.p.Band.Songs) == 0 {
-		a.ShowMessage("Мои песни", "У тебя пока нет ни одной песни.")
+		g.app.ShowMessage("Мои песни", "У тебя пока нет ни одной песни.")
 		g.MusicMenuActions()
 		return
 	}
@@ -130,7 +130,7 @@ func (g *Game) ShowSongs(a *tui.App) {
 		actions = append(actions, tui.Action{
 			Label: g.p.Band.Songs[i].Render(),
 			Handle: func(a *tui.App) {
-				g.showSongInfo(a, index)
+				g.showSongInfo(index)
 			},
 		})
 	}
@@ -145,13 +145,13 @@ func (g *Game) ShowSongs(a *tui.App) {
 	g.app.SetActions(actions)
 }
 
-func (g *Game) forgetSong(a *tui.App, index int) {
+func (g *Game) forgetSong(index int) {
 	if index < 0 || index >= len(g.p.Band.Songs) {
 		return
 	}
 
 	if g.p.Band.Songs[index].Released {
-		a.ShowMessage(
+		g.app.ShowMessage(
 			"Не могу", "Ты не можешь забыть песню если она уже выпущена",
 		)
 		return
@@ -162,35 +162,35 @@ func (g *Game) forgetSong(a *tui.App, index int) {
 	)
 }
 
-func (g *Game) showSongInfo(a *tui.App, index int) {
+func (g *Game) showSongInfo(index int) {
 	if index < 0 || index >= len(g.p.Band.Songs) {
 		return
 	}
 
 	s := g.p.Band.Songs[index]
 
-	a.ShowChoicePopup(
+	g.app.ShowChoicePopup(
 		s.Title, s.InfoRender(),
 		[]tui.ChoiceOption{
 			{
 				Label: "Репетировать",
 				Handle: func(a *tui.App) {
-					g.BandRepetition(a, index)
-					g.ShowSongs(a)
+					g.BandRepetition(index)
+					g.ShowSongs()
 				},
 			},
 			{
 				Label: "Записать",
 				Handle: func(a *tui.App) {
-					g.RecordSong(a, index)
-					g.ShowSongs(a)
+					g.RecordSong(index)
+					g.ShowSongs()
 				},
 			},
 			{
 				Label: "Забыть",
 				Handle: func(a *tui.App) {
-					g.forgetSong(a, index)
-					g.ShowSongs(a)
+					g.forgetSong(index)
+					g.ShowSongs()
 				},
 			},
 			{
@@ -204,9 +204,9 @@ func (g *Game) showSongInfo(a *tui.App, index int) {
 //#########################################################################
 // WRITE SONGS
 
-func (g *Game) WriteSongs(a *tui.App) {
+func (g *Game) WriteSongs() {
 	if len(g.p.Ideas) == 0 {
-		a.ShowMessage("Написание трека", "У тебя пока нет идей для песен.")
+		g.app.ShowMessage("Написание трека", "У тебя пока нет идей для песен.")
 		g.MusicMenuActions()
 		return
 	}
@@ -217,7 +217,7 @@ func (g *Game) WriteSongs(a *tui.App) {
 		actions = append(actions, tui.Action{
 			Label: g.p.Ideas[i].Render(),
 			Handle: func(a *tui.App) {
-				g.showIdeaSongConv(a, index)
+				g.showIdeaSongConv(index)
 			},
 		})
 	}
@@ -232,19 +232,19 @@ func (g *Game) WriteSongs(a *tui.App) {
 	g.app.SetActions(actions)
 }
 
-func (g *Game) showIdeaSongConv(a *tui.App, index int) {
+func (g *Game) showIdeaSongConv(index int) {
 	if index < 0 || index >= len(g.p.Ideas) {
 		return
 	}
 
-	a.ShowChoicePopup(
+	g.app.ShowChoicePopup(
 		"Идея",
 		g.p.Ideas[index].Render(),
 		[]tui.ChoiceOption{
 			{
 				Label: "Написать песню",
 				Handle: func(a *tui.App) {
-					g.writeSongFromIdea(a, index)
+					g.writeSongFromIdea(index)
 				},
 			},
 			{
@@ -255,19 +255,19 @@ func (g *Game) showIdeaSongConv(a *tui.App, index int) {
 	)
 }
 
-func (g *Game) writeSongFromIdea(a *tui.App, index int) {
+func (g *Game) writeSongFromIdea(index int) {
 	if index < 0 || index >= len(g.p.Ideas) {
 		return
 	}
 	if g.p.Stats.Inspiration < 20 {
-		a.ShowMessage(
+		g.app.ShowMessage(
 			"Нет вдохновения",
 			"Пока что у тебя нет вдохновения, попробуй позже. Необходимо >20",
 		)
 		return
 	}
 
-	a.ShowFormPopup("Название песни",
+	g.app.ShowFormPopup("Название песни",
 		[]tui.FormField{
 			{
 				Key:          "song_title",
@@ -288,10 +288,10 @@ func (g *Game) writeSongFromIdea(a *tui.App, index int) {
 				),
 			)
 
-			a.AppendLog("Песня написана")
+			g.app.AppendLog("Песня написана")
 			g.p.Stats.AddInspiration(-20)
-			g.p.SkipDay(a)
-			a.SetStatus(g.p.RenderStatus())
+			g.SkipDay(1)
+			g.app.SetStatus(g.p.RenderStatus())
 			g.MusicMenuActions()
 		},
 	)
@@ -300,20 +300,20 @@ func (g *Game) writeSongFromIdea(a *tui.App, index int) {
 //#########################################################################
 // SOLO REPETITION
 
-func (g *Game) SoloRepetition(a *tui.App) {
+func (g *Game) SoloRepetition() {
 	g.p.Stats.AddSingingSkill(generators.Float64Year(g.rnd))
 	g.p.Stats.AddPlayingSkill(generators.Float64Year(g.rnd))
 
-	a.AppendLog("Ты упражнялся и улучшил свои навыки игры.")
-	g.p.SkipDay(a)
+	g.app.AppendLog("Ты упражнялся и улучшил свои навыки игры.")
+	g.SkipDay(1)
 }
 
 //#########################################################################
 // IMPROVIZATION
 
-func (g *Game) Improvization(a *tui.App) {
+func (g *Game) Improvization() {
 	if g.p.Stats.Inspiration < 2 {
-		a.ShowMessage(
+		g.app.ShowMessage(
 			"Нет вдохновения",
 			"Пока что у тебя нет вдохновения, попробуй позже. Необходимо >2",
 		)
@@ -326,26 +326,26 @@ func (g *Game) Improvization(a *tui.App) {
 	g.p.Stats.AddPlayingSkill(generators.Float64Year(g.rnd))
 	g.p.Stats.AddMusicWritingSkill(generators.Float64Year(g.rnd))
 
-	a.AppendLog("Ты импровизируешь на гитаре и продвигаешься к новой идее.")
+	g.app.AppendLog("Ты импровизируешь на гитаре и продвигаешься к новой идее.")
 
 	for g.p.ImprovizationXP >= 100 {
 		g.p.ImprovizationXP -= 100
 
 		g.p.Ideas = append(g.p.Ideas, music.NewIdea())
 
-		a.AppendLog("Во время импровизации у тебя родилась новая идея для трека.")
+		g.app.AppendLog("Во время импровизации у тебя родилась новая идея для трека.")
 	}
 
-	g.p.SkipDay(a)
-	a.SetStatus(g.p.RenderStatus())
+	g.SkipDay(1)
+	g.app.SetStatus(g.p.RenderStatus())
 }
 
 // ########################################################################
 // REWRITE SONG
 
-func (g *Game) RewriteSong(a *tui.App) {
+func (g *Game) RewriteSong() {
 	if len(g.p.Ideas) == 0 {
-		a.ShowMessage("Доработка идей", "У тебя пока нет идей для доработки.")
+		g.app.ShowMessage("Доработка идей", "У тебя пока нет идей для доработки.")
 		g.MusicMenuActions()
 		return
 	}
@@ -356,7 +356,7 @@ func (g *Game) RewriteSong(a *tui.App) {
 		actions = append(actions, tui.Action{
 			Label: g.p.Ideas[i].Render(),
 			Handle: func(a *tui.App) {
-				g.showIdeaActions(a, index)
+				g.showIdeaActions(index)
 			},
 		})
 	}
@@ -371,25 +371,25 @@ func (g *Game) RewriteSong(a *tui.App) {
 	g.app.SetActions(actions)
 }
 
-func (g *Game) showIdeaActions(a *tui.App, ideaIndex int) {
+func (g *Game) showIdeaActions(ideaIndex int) {
 	if ideaIndex < 0 || ideaIndex >= len(g.p.Ideas) {
 		return
 	}
 
-	a.ShowChoicePopup(
+	g.app.ShowChoicePopup(
 		"Идея",
 		g.p.Ideas[ideaIndex].Render(),
 		[]tui.ChoiceOption{
 			{
 				Label: "Доработать идею",
 				Handle: func(a *tui.App) {
-					g.improveIdea(a, ideaIndex)
+					g.improveIdea(ideaIndex)
 				},
 			},
 			{
 				Label: "Забыть идею",
 				Handle: func(a *tui.App) {
-					g.forgetIdea(a, ideaIndex)
+					g.forgetIdea(ideaIndex)
 				},
 			},
 			{
@@ -401,12 +401,12 @@ func (g *Game) showIdeaActions(a *tui.App, ideaIndex int) {
 }
 
 // todo: maybe trubles with optimization :)
-func (g *Game) improveIdea(a *tui.App, ideaIndex int) {
+func (g *Game) improveIdea(ideaIndex int) {
 	if ideaIndex < 0 || ideaIndex >= len(g.p.Ideas) {
 		return
 	}
 	if g.p.Stats.Inspiration < 5 {
-		a.ShowMessage(
+		g.app.ShowMessage(
 			"Нет вдохновения",
 			"Пока что у тебя нет вдохновения, попробуй позже.  Необходимо >5",
 		)
@@ -419,27 +419,27 @@ func (g *Game) improveIdea(a *tui.App, ideaIndex int) {
 	if g.rnd.Float64() < 0.45 {
 		boost := 2.0 + generators.Float64FifteenDays(g.rnd)
 		idea.AddPotential(boost)
-		a.AppendLog(fmt.Sprintf("Потенциал идеи вырос на %.1f.", boost))
+		g.app.AppendLog(fmt.Sprintf("Потенциал идеи вырос на %.1f.", boost))
 		improved = true
 	}
 
 	if improved {
-		a.AppendLog("Ты доработал идею и выжал из нее что-то стоящее.")
+		g.app.AppendLog("Ты доработал идею и выжал из нее что-то стоящее.")
 	} else {
-		a.AppendLog("Ты попытался доработать идею, но в этот раз она не стала лучше.")
+		g.app.AppendLog("Ты попытался доработать идею, но в этот раз она не стала лучше.")
 	}
 
-	g.RewriteSong(a)
+	g.RewriteSong()
 	g.p.Stats.AddInspiration(-5)
-	g.p.SkipDay(a)
+	g.SkipDay(1)
 }
 
-func (g *Game) forgetIdea(a *tui.App, ideaIndex int) {
+func (g *Game) forgetIdea(ideaIndex int) {
 	if ideaIndex < 0 || ideaIndex >= len(g.p.Ideas) {
 		return
 	}
 
 	g.p.Ideas = append(g.p.Ideas[:ideaIndex], g.p.Ideas[ideaIndex+1:]...)
-	a.AppendLog("Ты решил отпустить эту идею и больше к ней не возвращаться.")
-	g.RewriteSong(a)
+	g.app.AppendLog("Ты решил отпустить эту идею и больше к ней не возвращаться.")
+	g.RewriteSong()
 }
