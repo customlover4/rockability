@@ -6,7 +6,6 @@ func (g *Game) Frilance(a *tui.App)    {}
 func (g *Game) MyProperty(a *tui.App)  {}
 func (g *Game) BuyProperty(a *tui.App) {}
 func (g *Game) Supermarket(a *tui.App) {}
-func (g *Game) StreetShop(a *tui.App)  {}
 func (g *Game) MusicShop(a *tui.App)   {}
 
 func (g *Game) FinanceMenuActions() {
@@ -33,12 +32,6 @@ func (g *Game) FinanceMenuActions() {
 			Label: "Гипермаркет",
 			Handle: func(a *tui.App) {
 				g.Supermarket(a)
-			},
-		},
-		{
-			Label: "Уличный рынок",
-			Handle: func(a *tui.App) {
-				g.StreetShop(a)
 			},
 		},
 		{
