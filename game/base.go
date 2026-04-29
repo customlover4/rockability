@@ -8,8 +8,9 @@ func (g *Game) BaseUpdateScreen() {
 		LogTitle:    "Вывод",
 		StatusTitle: "Статус",
 		Log: []string{
-			"Твой путь начинается, тебе 18, только окончил школу,",
+			"Твой путь начинается, тебе 18, на улице 1995,",
 			"твоя цель стать лучшим музыкантом в мире.",
+			"Ты создаешь свою группу и пока ты один, но все впереди.",
 		},
 		Status:  g.p.RenderStatus(),
 		Actions: []tui.Action{},
@@ -21,13 +22,13 @@ func (g *Game) BaseActions() {
 	g.app.SetActions(
 		[]tui.Action{
 			{
-				Label: "Инфо (in progress)",
+				Label: "Инфо",
 				Handle: func(a *tui.App) {
 					g.InfoMenuActions()
 				},
 			},
 			{
-				Label: "Музыка (in progress)",
+				Label: "Музыка",
 				Handle: func(a *tui.App) {
 					g.MusicMenuActions()
 				},
