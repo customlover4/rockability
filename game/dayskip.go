@@ -11,7 +11,7 @@ func (g *Game) ProcessStructs() {
 	g.p.Band.ProcessNewDay(g.app, g.p.Agetime)
 }
 
-func (p *Game) GlobalRandomEvents() {}
+func (g *Game) GlobalRandomEvents() {}
 
 func (g *Game) Events() {
 	for g.p.Events.Len() != 0 {
@@ -27,6 +27,7 @@ func (g *Game) SkipDay(days int) {
 
 	g.ProcessStructs()
 	g.GlobalRandomEvents()
+	g.RequiredGlobalEvents()
 
 	g.Events()
 	g.app.UpdateStatusStats(
@@ -34,4 +35,16 @@ func (g *Game) SkipDay(days int) {
 		g.p.Stats.RenderStat(),
 	)
 	g.app.SetStatus(g.p.RenderStatus())
+}
+
+func (g *Game) SkipDaysWithoutEvents(days int) {
+	for range days {
+		g.p.Agetime = g.p.Agetime.Add(time.Hour * 24)
+		g.ProcessStructs()
+		g.app.UpdateStatusStats(
+			g.p.RenderStatus(),
+			g.p.Stats.RenderStat(),
+		)
+		g.app.SetStatus(g.p.RenderStatus())
+	}
 }

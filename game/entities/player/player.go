@@ -80,3 +80,4 @@ func (p *Player) AddMoney(value int) bool {
 func (p *Player) NewEvent(e event.Event) {
 	p.Events.PushBack(e)
 }
+

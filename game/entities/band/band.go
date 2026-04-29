@@ -14,7 +14,8 @@ import (
 type Band struct {
 	GroupName string
 
-	Members []person.Person
+	Drummer    person.Person
+	BassGuitar person.Person
 
 	Teamwork   float64
 	Popularity int8 // from 0 to 100
@@ -32,7 +33,6 @@ type Band struct {
 func NewBand(name string) *Band {
 	return &Band{
 		GroupName:  name,
-		Members:    make([]person.Person, 0),
 		Teamwork:   0,
 		Popularity: 0,
 		Fans:       0,
@@ -46,20 +46,28 @@ func NewBand(name string) *Band {
 	}
 }
 
-func (b *Band) AddTeamwork(value float64) {
-	if b.Teamwork+value < 0 {
-		b.Teamwork = 0
-	} else if b.Teamwork+value > 100 {
-		b.Teamwork = 100
+func clamp(value float64) float64 {
+	if value <= 0 {
+		return 0
+	} else if value >= 100 {
+		return 100
 	}
 
-	b.Teamwork += value
+	return value
+}
+
+func (b *Band) AddTeamwork(value float64) {
+	b.Teamwork = clamp(b.Teamwork + value)
+}
+
+func (b *Band) AddPlayskill(value float64) {
+	b.BassGuitar.PlayingSkill = clamp(b.BassGuitar.PlayingSkill + value)
+	b.Drummer.PlayingSkill = clamp(b.Drummer.PlayingSkill + value)
 }
 
 func (b *Band) RenderInfo() string {
-	var members []string
-	for _, v := range b.Members {
-		members = append(members, v.Name)
+	var members []string = []string{
+		b.Drummer.Name, b.BassGuitar.Name,
 	}
 	var info []string = []string{
 		fmt.Sprintf("Название: %s", b.GroupName),

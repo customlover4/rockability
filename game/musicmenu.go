@@ -94,6 +94,7 @@ func (g *Game) recordSongWithCoefficient(coef float64, price int, index int) {
 	g.p.Band.Songs[index].Record()
 
 	g.app.AppendLog("Песня успешно записана")
+	g.NewIdeaEvent()
 	g.SkipDay(1)
 }
 
@@ -103,14 +104,13 @@ func (g *Game) recordSongWithCoefficient(coef float64, price int, index int) {
 func (g *Game) BandRepetition(index int) {
 	g.p.Band.AddTeamwork(generators.Float64HalfYear(g.rnd))
 	g.p.Band.Songs[index].AddSkill(generators.Float64ThreeDays(g.rnd))
-	for _, member := range g.p.Band.Members {
-		member.AddPlayingSkill(generators.Float64Year(g.rnd))
-	}
+	g.p.Band.AddPlayskill(generators.Float64Year(g.rnd))
 
 	g.p.Stats.AddSingingSkill(generators.Float64Year(g.rnd))
 	g.p.Stats.AddPlayingSkill(generators.Float64Year(g.rnd))
 
 	g.app.AppendLog("Вы репетировали весь день")
+	g.NewIdeaEvent()
 	g.SkipDay(1)
 }
 
@@ -304,6 +304,7 @@ func (g *Game) SoloRepetition() {
 	g.p.Stats.AddPlayingSkill(generators.Float64Year(g.rnd))
 
 	g.app.AppendLog("Ты упражнялся и улучшил свои навыки игры.")
+	g.NewIdeaEvent()
 	g.SkipDay(1)
 }
 

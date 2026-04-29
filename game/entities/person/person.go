@@ -1,8 +1,23 @@
 package person
 
+import (
+	"game/game/entities/region"
+	"time"
+)
+
+const (
+	MaleGender = iota
+	FemaleGender
+)
+
 // non-playable persons in the world
 type Person struct {
-	Name         string
+	Name     string
+	Age      int
+	Gender   int8
+	Region   region.Region
+	BirthDay time.Time
+
 	PlayingSkill float64
 }
 
@@ -19,3 +34,5 @@ func clampValue(value float64) float64 {
 func (p *Person) AddPlayingSkill(value float64) {
 	p.PlayingSkill = clampValue(p.PlayingSkill + value)
 }
+
+func NewMale() {}

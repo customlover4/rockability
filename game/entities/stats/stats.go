@@ -25,7 +25,7 @@ type Stats struct {
 
 func DefaultStats() Stats {
 	return Stats{
-		Age:         18,
+		Age:         50,
 		Health:      100,
 		Hapiness:    100,
 		Inspiration: 50,
@@ -42,6 +42,11 @@ func (s *Stats) ProcessNewDay(a *tui.App, newDate time.Time) {
 	if newDate.Month() == BirthMonth && newDate.Day() == BirthDay {
 		a.AppendLog("Сегодня твой день рождения, отпразднуй его!")
 		s.Age += 1
+
+		if s.Age-44 > 0 {
+			a.AppendLog("Твой возраст сказывается на твоем здоровье.")
+			s.AddHealth(float64(s.Age-44) * -2.5)
+		}
 	}
 }
 
