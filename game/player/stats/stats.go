@@ -12,15 +12,15 @@ const BirthDay = 28
 
 type Stats struct {
 	Age         int8
-	Health      int8 // from 0 to 100
-	Hapiness    int8 // from 0 to 100
-	Inspiration int8 // from 0 to 100
-	Popularity  int8 // from 0 to 100
+	Health      float64 // from 0 to 100
+	Hapiness    float64 // from 0 to 100
+	Inspiration float64 // from 0 to 100
+	Popularity  float64 // from 0 to 100
 
-	LyricsSkill       int8 // from 0 to 100
-	MusicWritingSkill int8 // from 0 to 100
-	PlayingSkill      int8 // from 0 to 100
-	SingingSkill      int8 // from 0 to 100
+	LyricsSkill       float64 // from 0 to 100
+	MusicWritingSkill float64 // from 0 to 100
+	PlayingSkill      float64 // from 0 to 100
+	SingingSkill      float64 // from 0 to 100
 }
 
 func DefaultStats() Stats {
@@ -47,24 +47,23 @@ func (s *Stats) ProcessNewDay(a *tui.App, newDate time.Time) {
 
 func (s *Stats) RenderStats() string {
 	var skills = []string{
-		fmt.Sprintf("%s: %d", "Написание слов", s.LyricsSkill),
-		fmt.Sprintf("%s: %d", "Написание музыки", s.MusicWritingSkill),
-		fmt.Sprintf("%s: %d", "Навык игры на гитаре", s.PlayingSkill),
-		fmt.Sprintf("%s: %d", "Навык исполнения", s.SingingSkill),
+		fmt.Sprintf("%s: %.0f", "Написание слов", s.LyricsSkill),
+		fmt.Sprintf("%s: %.0f", "Написание музыки", s.MusicWritingSkill),
+		fmt.Sprintf("%s: %.0f", "Навык игры на гитаре", s.PlayingSkill),
+		fmt.Sprintf("%s: %.0f", "Навык исполнения", s.SingingSkill),
 	}
 	return strings.Join(skills, "\n")
 }
 
 func (s *Stats) RenderHealth() string {
-	if s.Health >= 90 {
-		return "великолепное"
-	} else if s.Health >= 60 {
-		return "удовлетворительное"
-	} else if s.Health >= 30 {
-		return "плохое"
-	} else if s.Health >= 10 {
-		return "ужасное"
-	} else {
-		return "присмерти"
+	return fmt.Sprintf("%.0f", s.Health)
+}
+
+func (s *Stats) RenderOtherInfo() string {
+	res := []string{
+		fmt.Sprintf("Счастье: %.0f", s.Hapiness),
+		fmt.Sprintf("Вдохновение: %.0f", s.Inspiration),
+		fmt.Sprintf("Популярность: %.0f", s.Popularity),
 	}
+	return strings.Join(res, "\n")
 }
