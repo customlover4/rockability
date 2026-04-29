@@ -1,6 +1,7 @@
 package game
 
 import (
+	"game/game/player/band"
 	"game/game/player/region"
 	"game/tui"
 )
@@ -47,14 +48,14 @@ func (g *Game) ChoiceRegion(a *tui.App) {
 
 func (g *Game) NewGameStartup(a *tui.App) {
 	a.ShowFormPopup("Создание игры", []tui.FormField{
-		tui.FormField{
+		{
 			Key:          "player_name",
 			Label:        "Сценическое имя",
 			Value:        "",
 			Placeholder:  "Имя",
 			DefaultValue: "John Doe",
 		},
-		tui.FormField{
+		{
 			Key:          "group_name",
 			Label:        "Название группы",
 			Value:        "",
@@ -63,7 +64,7 @@ func (g *Game) NewGameStartup(a *tui.App) {
 		},
 	}, func(values map[string]string) {
 		g.p.SetName(values["player_name"])
-		g.p.SetGroupName(values["group_name"])
+		g.p.Band = band.NewBand(values["group_name"])
 		g.ChoiceRegion(a)
 	})
 }
