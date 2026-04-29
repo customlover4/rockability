@@ -3,7 +3,7 @@ package player
 import (
 	"container/list"
 	"fmt"
-	"game/game/player/band"
+	"game/game/band"
 	"game/game/player/music"
 	"game/game/player/region"
 	"game/game/player/stats"

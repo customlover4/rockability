@@ -1,7 +1,7 @@
 package game
 
 import (
-	"game/game/player/band"
+	"game/game/band"
 	"game/game/player/region"
 	"game/tui"
 )
@@ -18,14 +18,14 @@ func (g *Game) StartUpUpdateScreen() {
 		Status: g.p.RenderStatus(),
 		Actions: []tui.Action{
 			{
-				Label:  "Новая игра",
+				Label: "Новая игра",
 				Handle: func(a *tui.App) {
 					g.NewGameStartup()
 				},
 			},
 			{
-				Label:  "Загрузить игру",
-				Handle: func (a *tui.App) {
+				Label: "Загрузить игру",
+				Handle: func(a *tui.App) {
 					g.LoadGameStartup()
 				},
 			},
