@@ -3,10 +3,10 @@ package player
 import (
 	"container/list"
 	"fmt"
-	"game/game/band"
-	"game/game/player/music"
-	"game/game/player/region"
-	"game/game/player/stats"
+	"game/game/entities/band"
+	"game/game/entities/music"
+	"game/game/entities/region"
+	"game/game/entities/stats"
 	"game/tui"
 	"time"
 )

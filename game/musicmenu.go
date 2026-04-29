@@ -3,7 +3,7 @@ package game
 import (
 	"fmt"
 
-	"game/game/player/music"
+	"game/game/entities/music"
 	"game/generators"
 	"game/tui"
 )

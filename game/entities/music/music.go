@@ -2,7 +2,7 @@ package music
 
 import (
 	"fmt"
-	"game/game/player/stats"
+	"game/game/entities/stats"
 	"strings"
 )
 

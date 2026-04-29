@@ -2,10 +2,10 @@ package band
 
 import (
 	"fmt"
-	"game/game/player/music"
-	"game/game/player/music/label"
-	"game/game/player/music/manager"
-	"game/game/player/person"
+	"game/game/entities/label"
+	"game/game/entities/manager"
+	"game/game/entities/music"
+	"game/game/entities/person"
 	"game/tui"
 	"strings"
 	"time"
@@ -47,9 +47,9 @@ func NewBand(name string) *Band {
 }
 
 func (b *Band) AddTeamwork(value float64) {
-	if b.Teamwork + value < 0 {
+	if b.Teamwork+value < 0 {
 		b.Teamwork = 0
-	} else if b.Teamwork + value > 100 {
+	} else if b.Teamwork+value > 100 {
 		b.Teamwork = 100
 	}
 

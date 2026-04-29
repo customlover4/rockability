@@ -1,8 +1,8 @@
 package game
 
 import (
-	"game/game/band"
-	"game/game/player/region"
+	"game/game/entities/band"
+	"game/game/entities/region"
 	"game/tui"
 )
 
