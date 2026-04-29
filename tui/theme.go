@@ -1,3 +1,4 @@
+// tui/theme.go
 package tui
 
 import (
@@ -5,19 +6,41 @@ import (
 	"github.com/rivo/tview"
 )
 
+type Theme struct {
+	Background         tcell.Color
+	PanelBackground    tcell.Color
+	PanelText          tcell.Color
+	Border             tcell.Color
+	Title              tcell.Color
+	StatusAccent       string
+	StatusValue        string
+	ListSelectedText   tcell.Color
+	ListSelectedBg     tcell.Color
+	ModalBackground    tcell.Color
+	CutsceneBackground tcell.Color
+
+	StatHappyColor   string
+}
+
 func DefaultTheme() Theme {
 	return Theme{
-		Background:         tcell.NewRGBColor(10, 12, 18),
-		PanelBackground:    tcell.NewRGBColor(18, 22, 31),
-		PanelText:          tcell.NewRGBColor(228, 229, 231),
-		Border:             tcell.NewRGBColor(90, 124, 176),
-		Title:              tcell.NewRGBColor(127, 214, 255),
-		StatusAccent:       "gold",
-		StatusValue:        "white",
-		ListSelectedText:   tcell.ColorBlack,
-		ListSelectedBg:     tcell.NewRGBColor(110, 224, 190),
-		ModalBackground:    tcell.NewRGBColor(23, 27, 38),
+		Background:         tcell.NewRGBColor(18, 18, 22),
+		PanelBackground:    tcell.NewRGBColor(32, 32, 40),
+		ModalBackground:    tcell.NewRGBColor(28, 24, 32),
 		CutsceneBackground: tcell.ColorBlack,
+
+		PanelText: tcell.NewRGBColor(220, 220, 225),
+
+		Border: tcell.NewRGBColor(140, 40, 50),
+		Title:  tcell.NewRGBColor(255, 80, 90),
+
+		StatusAccent: "gold",
+		StatusValue:  "white",
+
+		ListSelectedText: tcell.ColorBlack,
+		ListSelectedBg:   tcell.NewRGBColor(220, 60, 70),
+
+		StatHappyColor:   "orange",
 	}
 }
 

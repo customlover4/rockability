@@ -31,6 +31,7 @@ type App struct {
 	status      *tview.TextView
 	actionsList *tview.List
 	statsView   *tview.TextView
+	logoView    *tview.TextView
 
 	popupQueue  []func()
 	popupActive bool
@@ -173,6 +174,28 @@ func (a *App) enqueuePopup(showFunc func()) {
 	}
 }
 
+func renderGoldText(text string) string {
+	return fmt.Sprintf("[#D4AF37]%s[default]", text)
+}
+
+func renderRockabilityLogo() string {
+	art := []string{
+		"▗▄▄▖  ▗▄▖  ▗▄▄▖▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▄▄▄▖▗▖   ▗▄▄▄▖▗▄▄▄▖▗▖  ▗▖",
+		"▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌▗▞▘▐▌ ▐▌▐▌ ▐▌  █  ▐▌     █    █   ▝▚▞▘ ",
+		"▐▛▀▚▖▐▌ ▐▌▐▌   ▐▛▚▖ ▐▛▀▜▌▐▛▀▚▖  █  ▐▌     █    █    ▐▌  ",
+		"▐▌ ▐▌▝▚▄▞▘▝▚▄▄▖▐▌ ▐▌▐▌ ▐▌▐▙▄▞▘▗▄█▄▖▐▙▄▄▖▗▄█▄▖  █    ▐▌  ",
+	}
+
+	var result strings.Builder
+	result.WriteString("\n")
+	for _, line := range art {
+		result.WriteString(renderGoldText(line) + "\n")
+	}
+	result.WriteString("  " + renderGoldText("═══════════════════════════════════════════") + "\n")
+
+	return result.String()
+}
+
 func (a *App) dequeuePopup() {
 	a.popupActive = false
 
@@ -228,19 +251,32 @@ func (a *App) buildMainLayout() {
 	a.statsView.SetTitleColor(a.theme.Title)
 	a.statsView.SetTitle("Показатели")
 
+	a.logoView = tview.NewTextView().
+		SetDynamicColors(true).
+		SetTextAlign(tview.AlignCenter).
+		SetWordWrap(false)
+	a.logoView.SetBorder(false)
+	a.logoView.SetBackgroundColor(a.theme.PanelBackground)
+	a.logoView.SetTextColor(a.theme.PanelText)
+
+	rightColumn := tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(a.description, 0, 4, false).
+		AddItem(a.logoView, 6, 0, false)
+
 	leftColumn := tview.NewFlex().
 		SetDirection(tview.FlexRow).
-		AddItem(a.actionsList, 0, 3, true). // 3 части высоты — список действий
-		AddItem(a.statsView, 0, 1, false)   // 1 часть высоты — показатели
+		AddItem(a.actionsList, 0, 3, true).
+		AddItem(a.statsView, 0, 1, false)
 
 	topLayout := tview.NewFlex().
-		AddItem(leftColumn, 40, 1, true).   // фикс 40 символов ширина
-		AddItem(a.description, 0, 3, false) // остальная ширина — лог
+		AddItem(leftColumn, 40, 1, true).
+		AddItem(rightColumn, 0, 3, false)
 
 	mainLayout := tview.NewFlex().
 		SetDirection(tview.FlexRow).
-		AddItem(topLayout, 0, 1, true). // гибкая высота
-		AddItem(a.status, 3, 0, false)  // фикс 3 строки внизу
+		AddItem(topLayout, 0, 1, true).
+		AddItem(a.status, 3, 0, false)
 	mainLayout.SetBackgroundColor(a.theme.Background)
 
 	a.pages.AddPage("main", mainLayout, true, true)
@@ -266,6 +302,15 @@ func (a *App) render() {
 	a.renderLog()
 	a.renderStatus()
 	a.renderStats()
+	a.renderLogo()
+}
+
+func (a *App) renderLogo() {
+	if a.logoView == nil {
+		return
+	}
+
+	a.logoView.SetText(renderRockabilityLogo())
 }
 
 func (a *App) renderActions() {
@@ -320,11 +365,24 @@ func (a *App) renderStats() {
 
 	lines := make([]string, 0, 3)
 	for _, stat := range a.screen.Stats {
-		lines = append(
-			lines, fmt.Sprintf("%s: %d/100", stat.Name, stat.Value),
-		)
+		bar := renderMiniBar(stat.Value, a.theme.StatHappyColor)
+		lines = append(lines, fmt.Sprintf("%s: %s [%s]%3d[default]/100 ",
+			stat.Name, bar, a.theme.StatHappyColor, stat.Value))
 	}
 	a.statsView.SetText(strings.Join(lines, "\n"))
+}
+
+func renderMiniBar(value int, color string) string {
+	const width = 10
+	filled := value / 10
+	empty := width - filled
+
+	fillChar := "█"
+	emptyChar := "░"
+
+	return fmt.Sprintf("[%s]%s[default]%s", color,
+		strings.Repeat(fillChar, filled),
+		strings.Repeat(emptyChar, empty))
 }
 
 func (a *App) installGlobalInput() {
